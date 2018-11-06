@@ -1,11 +1,14 @@
 package main;
 
 import constant.BufferSizeConstant;
+import utils.ConfUtil;
 
 import java.io.*;
 import java.util.*;
 
 /**
+ * 文件合并
+ *
  * @author wqh
  * @date 18-11-6
  */
@@ -13,8 +16,10 @@ import java.util.*;
 public class MergeFile {
     public static void main(String[] args) throws IOException {
 
+        String location = ConfUtil.getFileLocationByProperties();
 
-        File file = new File("/home/wqh/github/splite/part");
+        File locationFile = new File(location);
+        File file = new File(locationFile.getParent(), "/part");
         mergeFile(file);
 
     }
@@ -38,8 +43,9 @@ public class MergeFile {
             throw new RuntimeException("配置文件数量不正确");
         }
         /**
-         * 将数组排序
+         * 将数组排序,可以使用lambda表达式简化
          */
+        //TODO
         Arrays.sort(partFiles, new Comparator<File>() {
             @Override
             public int compare(File o1, File o2) {
@@ -70,8 +76,6 @@ public class MergeFile {
 
 
     static class SuffixFilter implements FilenameFilter {
-
-
         public String suffixName;
 
         public SuffixFilter(String suffixName) {
