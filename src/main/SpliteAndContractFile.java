@@ -17,16 +17,22 @@ public class SpliteAndContractFile {
         String location = getFileLocationByProperties();
 
         File file = new File(location);
-        splite(location, file);
-
+        splite(file);
 
 
     }
 
-    private static void splite(String location, File file) throws IOException {
-        File file1 = new File(location + "/part");
-        if (!file1.exists()) {
-            file1.mkdirs();
+    /**
+     * 文件切割
+     *
+     * @param file 带切割的文件
+     * @throws IOException IO异常
+     */
+
+    private static void splite(File file) throws IOException {
+        File partFile = new File(file.getParent() + "/part");
+        if (!partFile.exists()) {
+            partFile.mkdirs();
         }
         FileInputStream inputStream = new FileInputStream(file);
         FileOutputStream outputStream = null;
@@ -34,15 +40,15 @@ public class SpliteAndContractFile {
         int count = 1;
         byte[] bytes = new byte[SIZE];
         while ((len = inputStream.read(bytes)) != -1) {
-            outputStream = new FileOutputStream(new File(file, count++ + ".part"));
-            outputStream.write(bytes,0,len);
+            outputStream = new FileOutputStream(new File(partFile, count++ + ".part"));
+            outputStream.write(bytes, 0, len);
         }
         Properties properties = new Properties();
-        properties.setProperty("count",String.valueOf(count));
-        properties.setProperty("fileName",file.getName());
-        FileOutputStream fileOutputStream = new FileOutputStream(new File(file1, "splite.ini"));
-        properties.store(fileOutputStream,"切割");
-        if (outputStream!=null){
+        properties.setProperty("count", String.valueOf(--count));
+        properties.setProperty("fileName", file.getName());
+        FileOutputStream fileOutputStream = new FileOutputStream(new File(partFile, "splite.ini"));
+        properties.store(fileOutputStream, "切割");
+        if (outputStream != null) {
             outputStream.close();
         }
         inputStream.close();
@@ -70,6 +76,7 @@ public class SpliteAndContractFile {
                     resourceAsStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+
                 }
             }
         }
