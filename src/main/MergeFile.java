@@ -61,17 +61,22 @@ public class MergeFile {
          * 将数组排序,可以使用lambda表达式简化
          */
         //TODO
-        Arrays.sort(partFiles, new Comparator<File>() {
-            @Override
-            public int compare(File o1, File o2) {
-                String substring = o1.getName().substring(0, o1.getName().indexOf("."));
-                String substring1 = o2.getName().substring(0, o2.getName().indexOf("."));
-                int i = Integer.parseInt(substring);
-                int i1 = Integer.parseInt(substring1);
-                int index = i > i1 ? 1 : -1;
-                return index;
-            }
-        });
+        //        Arrays.sort(partFiles, new Comparator<File>() {
+        //            @Override
+        //            public int compare(File o1, File o2) {
+        //                String substring = o1.getName().substring(0, o1.getName().indexOf("."));
+        //                String substring1 = o2.getName().substring(0, o2.getName().indexOf("."));
+        //                int i = Integer.parseInt(substring);
+        //                int i1 = Integer.parseInt(substring1);
+        //                int index = i > i1 ? 1 : -1;
+        //                return index;
+        //            }
+        //        });
+
+
+        Arrays.sort(partFiles, (o1, o2) -> Integer.parseInt(o1.getName().substring(0, o1.getName().indexOf("."))) >
+                Integer.parseInt(o2.getName().substring(0, o2.getName().indexOf("."))) ? 1 : -1);
+
         List<FileInputStream> list = new ArrayList<FileInputStream>();
         for (int i = 0; i < partFiles.length; i++) {
             list.add(new FileInputStream(partFiles[i]));
@@ -82,6 +87,7 @@ public class MergeFile {
         int len;
         byte[] bytes = new byte[BufferSizeConstant.BUFFER_SIZE];
         while ((len = sequenceInputStream.read(bytes)) != -1) {
+
             outputStream.write(bytes, 0, len);
         }
         outputStream.close();
