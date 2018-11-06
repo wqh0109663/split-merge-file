@@ -32,9 +32,12 @@ public class SplitFile {
      */
 
     private static void split(File file) throws IOException {
-        File partFile = new File(file.getParent() + "/part");
+        File partFile = new File(file.getParent() + File.separator + "part");
         if (!partFile.exists()) {
-            partFile.mkdirs();
+            boolean mkdirs = partFile.mkdirs();
+            if (!mkdirs) {
+                throw new RuntimeException("创建文件夹失败!!!");
+            }
         }
         FileInputStream inputStream = new FileInputStream(file);
         FileOutputStream outputStream = null;
@@ -56,8 +59,6 @@ public class SplitFile {
         inputStream.close();
         fileOutputStream.close();
     }
-
-
 
 
 }

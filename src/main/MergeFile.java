@@ -19,8 +19,9 @@ public class MergeFile {
         String location = ConfUtil.getFileLocationByProperties();
 
         File locationFile = new File(location);
-        File file = new File(locationFile.getParent(), "/part");
+        File file = new File(locationFile.getParent(), File.separator + "part");
         mergeFile(file);
+
 
     }
 
@@ -36,11 +37,25 @@ public class MergeFile {
         Properties properties = new Properties();
         properties.load(iniInputStream);
         String count = properties.getProperty("count");
+        String fileName = properties.getProperty("fileName");
 
 
         File[] partFiles = file.listFiles(new SuffixFilter(".part"));
-        if (partFiles != null && partFiles.length != Integer.parseInt(count)) {
+        assert partFiles != null;
+        if (partFiles.length != Integer.parseInt(count)) {
             throw new RuntimeException("配置文件数量不正确");
+        } else if (partFiles.length == 1) {
+            FileOutputStream out = new FileOutputStream(new File(file, File.separator + fileName));
+            FileInputStream in = new FileInputStream(partFiles[0]);
+            int len;
+            byte[] bytes = new byte[1024];
+            while ((len = in.read(bytes)) != -1) {
+                out.write(bytes, 0, len);
+            }
+            out.close();
+            in.close();
+            iniInputStream.close();
+            return;
         }
         /**
          * 将数组排序,可以使用lambda表达式简化
@@ -63,15 +78,15 @@ public class MergeFile {
         }
         Enumeration<FileInputStream> enumeration = Collections.enumeration(list);
         SequenceInputStream sequenceInputStream = new SequenceInputStream(enumeration);
-        FileOutputStream outputStream = new FileOutputStream(new File(file, "/a.mp4"));
+        FileOutputStream outputStream = new FileOutputStream(new File(file, File.separator + fileName));
         int len;
         byte[] bytes = new byte[BufferSizeConstant.BUFFER_SIZE];
         while ((len = sequenceInputStream.read(bytes)) != -1) {
             outputStream.write(bytes, 0, len);
         }
         outputStream.close();
-        sequenceInputStream.close();
         iniInputStream.close();
+        sequenceInputStream.close();
     }
 
 

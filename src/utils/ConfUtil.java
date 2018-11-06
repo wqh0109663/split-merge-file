@@ -2,11 +2,14 @@ package utils;
 
 import main.SplitFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 /**
+ * 获取配置信息
+ *
  * @author wqh
  * @date 18-11-6
  */
@@ -31,3 +34,5 @@ public class ConfUtil {
         }
     }
 }
+
+
