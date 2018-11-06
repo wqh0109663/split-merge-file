@@ -1,7 +1,6 @@
 package main;
 
 import constant.BufferSizeConstant;
-import utils.ConfUtil;
 
 import java.io.*;
 import java.util.Properties;
@@ -16,8 +15,7 @@ public class SplitFile {
 
 
     public static void main(String[] args) throws Exception {
-        String propertiesPath = "conf/filePath.properties";
-        String location = ConfUtil.getFileLocationByProperties(propertiesPath);
+        String location = getFileLocationByProperties();
 
         File file = new File(location);
         split(file);
@@ -41,7 +39,7 @@ public class SplitFile {
         FileOutputStream outputStream = null;
         int len;
         int count = 1;
-        byte[] bytes = new byte[BufferSizeConstant.SIZE];
+        byte[] bytes = new byte[BufferSizeConstant.BUFFER_SIZE];
         while ((len = inputStream.read(bytes)) != -1) {
             outputStream = new FileOutputStream(new File(partFile, count++ + ".part"));
             outputStream.write(bytes, 0, len);
@@ -58,7 +56,25 @@ public class SplitFile {
         fileOutputStream.close();
     }
 
-
+    private static String getFileLocationByProperties() {
+        InputStream resourceAsStream = null;
+        try {
+            Properties properties = new Properties();
+            resourceAsStream = SplitFile.class.getClassLoader().getResourceAsStream("conf/filePath.properties");
+            properties.load(resourceAsStream);
+            return properties.getProperty("fileLocation");
+        } catch (IOException e) {
+            throw new RuntimeException("IO异常");
+        } finally {
+            if (resourceAsStream != null) {
+                try {
+                    resourceAsStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 
 }

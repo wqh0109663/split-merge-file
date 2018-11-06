@@ -13,7 +13,13 @@ import java.util.*;
 public class MergeFile {
     public static void main(String[] args) throws IOException {
 
-        final File file = new File("/home/wqh/github/splite/part");
+
+        File file = new File("/home/wqh/github/splite/part");
+        mergeFile(file);
+
+    }
+
+    private static void mergeFile(File file) throws IOException {
         File[] files = file.listFiles(new SuffixFilter(".ini"));
 
         if (files != null && files.length != 1) {
@@ -31,6 +37,9 @@ public class MergeFile {
         if (partFiles != null && partFiles.length != Integer.parseInt(count)) {
             throw new RuntimeException("配置文件数量不正确");
         }
+        /**
+         * 将数组排序
+         */
         Arrays.sort(partFiles, new Comparator<File>() {
             @Override
             public int compare(File o1, File o2) {
@@ -38,7 +47,7 @@ public class MergeFile {
                 String substring1 = o2.getName().substring(0, o2.getName().indexOf("."));
                 int i = Integer.parseInt(substring);
                 int i1 = Integer.parseInt(substring1);
-                int index =  i > i1 ? 1 : -1;
+                int index = i > i1 ? 1 : -1;
                 return index;
             }
         });
@@ -50,7 +59,7 @@ public class MergeFile {
         SequenceInputStream sequenceInputStream = new SequenceInputStream(enumeration);
         FileOutputStream outputStream = new FileOutputStream(new File(file, "/a.mp4"));
         int len;
-        byte[] bytes = new byte[BufferSizeConstant.SIZE];
+        byte[] bytes = new byte[BufferSizeConstant.BUFFER_SIZE];
         while ((len = sequenceInputStream.read(bytes)) != -1) {
             outputStream.write(bytes, 0, len);
         }

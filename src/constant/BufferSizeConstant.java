@@ -7,6 +7,8 @@ package constant;
 public interface BufferSizeConstant {
     /**
      * 每次切割的大小
+     * 5242880 = 1024 * 1024 * 5
      */
-    int SIZE = 1024 * 1024 * 5;
+
+    int BUFFER_SIZE = 5242880;
 }
