@@ -1,8 +1,9 @@
 # 文件切割与合并
 
 ## 使用方法
-### idea中使用
-### 命令行中使用
+1. git clone https://github.com/wqh0109663/split-merge-file.git
+2. 修改conf/filePath.properties ,指定一个文件
+3. 运行splitFile和mergeFile
 ## 使用idea-find-bugs找出的一个bug
 ### 待我细细说来
 > 先贴上代码

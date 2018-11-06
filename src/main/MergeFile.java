@@ -60,20 +60,6 @@ public class MergeFile {
         /**
          * 将数组排序,可以使用lambda表达式简化
          */
-        //TODO
-        //        Arrays.sort(partFiles, new Comparator<File>() {
-        //            @Override
-        //            public int compare(File o1, File o2) {
-        //                String substring = o1.getName().substring(0, o1.getName().indexOf("."));
-        //                String substring1 = o2.getName().substring(0, o2.getName().indexOf("."));
-        //                int i = Integer.parseInt(substring);
-        //                int i1 = Integer.parseInt(substring1);
-        //                int index = i > i1 ? 1 : -1;
-        //                return index;
-        //            }
-        //        });
-
-
         Arrays.sort(partFiles, (o1, o2) -> Integer.parseInt(o1.getName().substring(0, o1.getName().indexOf("."))) >
                 Integer.parseInt(o2.getName().substring(0, o2.getName().indexOf("."))) ? 1 : -1);
 
@@ -102,15 +88,6 @@ public class MergeFile {
         public SuffixFilter(String suffixName) {
             this.suffixName = suffixName;
         }
-
-        /**
-         * Tests if a specified file should be included in a file list.
-         *
-         * @param dir  the directory in which the file was found.
-         * @param name the name of the file.
-         * @return <code>true</code> if and only if the name should be
-         * included in the file list; <code>false</code> otherwise.
-         */
 
         @Override
         public boolean accept(File dir, String name) {
