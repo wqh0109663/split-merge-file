@@ -6,6 +6,6 @@
 3. 运行splitFile和mergeFile
 
 ## 命令行中使用方式
-//TODO
+TODO
 
 
