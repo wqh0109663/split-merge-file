@@ -12,7 +12,6 @@ import java.util.*;
  * @author wqh
  * @date 18-11-6
  */
-@SuppressWarnings("all")
 public class MergeFile {
     public static void main(String[] args) throws IOException {
 
@@ -21,30 +20,32 @@ public class MergeFile {
         File locationFile = new File(location);
         File file = new File(locationFile.getParent(), File.separator + "part");
         mergeFile(file);
-
-
     }
-
+    @SuppressWarnings("all")
     private static void mergeFile(File file) throws IOException {
-        File[] files = file.listFiles(new SuffixFilter(".ini"));
+        /*过滤出文件结尾为ini的文件数组*/
+        File[] files = file.listFiles((f, str) -> str.endsWith(".ini"));
 
-        if (files != null && files.length != 1) {
-            throw new RuntimeException("【配置文件数量不正确");
+        if (files == null || files.length != 1) {
+            throw new RuntimeException("【配置文件数量不正确】");
         }
-        assert files != null;
         File iniFile = files[0];
         FileInputStream iniInputStream = new FileInputStream(iniFile);
         Properties properties = new Properties();
         properties.load(iniInputStream);
         String count = properties.getProperty("count");
         String fileName = properties.getProperty("fileName");
-
-
-        File[] partFiles = file.listFiles(new SuffixFilter(".part"));
-        assert partFiles != null;
+        /* 使用lambda表达式实现FilenameFilter*/
+        File[] partFiles = file.listFiles((f, str) -> str.endsWith(".part"));
+        if (partFiles == null) {
+            throw new RuntimeException("【碎片文件不存在！】");
+        }
         if (partFiles.length != Integer.parseInt(count)) {
-            throw new RuntimeException("配置文件数量不正确");
+            throw new RuntimeException("【碎片文件数量不正确】");
         } else if (partFiles.length == 1) {
+            /*
+             *如果文件比较小，只有一个碎片文件
+             */
             FileOutputStream out = new FileOutputStream(new File(file, File.separator + fileName));
             FileInputStream in = new FileInputStream(partFiles[0]);
             int len;
@@ -57,15 +58,15 @@ public class MergeFile {
             iniInputStream.close();
             return;
         }
-        /**
-         * 将数组排序,可以使用lambda表达式简化
+        /*
+         * 将数组排序
          */
         Arrays.sort(partFiles, (o1, o2) -> Integer.parseInt(o1.getName().substring(0, o1.getName().indexOf("."))) >
-                Integer.parseInt(o2.getName().substring(0, o2.getName().indexOf("."))) ? 1 : -1);
+                Integer.parseInt(o2.getName().substring(0, o2.getName().indexOf("."))) ? 1 : 0);
 
-        List<FileInputStream> list = new ArrayList<FileInputStream>();
-        for (int i = 0; i < partFiles.length; i++) {
-            list.add(new FileInputStream(partFiles[i]));
+        List<FileInputStream> list = new ArrayList<>();
+        for (File partFile : partFiles) {
+            list.add(new FileInputStream(partFile));
         }
         Enumeration<FileInputStream> enumeration = Collections.enumeration(list);
         SequenceInputStream sequenceInputStream = new SequenceInputStream(enumeration);
@@ -79,20 +80,6 @@ public class MergeFile {
         outputStream.close();
         iniInputStream.close();
         sequenceInputStream.close();
-    }
-
-
-    static class SuffixFilter implements FilenameFilter {
-        public String suffixName;
-
-        public SuffixFilter(String suffixName) {
-            this.suffixName = suffixName;
-        }
-
-        @Override
-        public boolean accept(File dir, String name) {
-            return name.endsWith(suffixName);
-        }
     }
 
 
