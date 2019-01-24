@@ -32,6 +32,7 @@ public class SplitFile {
      */
 
     private static void split(File file) throws IOException {
+        /*创建一个part文件夹*/
         File partFile = new File(file.getParent() + File.separator + "part");
         if (!partFile.exists()) {
             boolean mkdirs = partFile.mkdirs();
@@ -39,6 +40,7 @@ public class SplitFile {
                 throw new RuntimeException("创建文件夹失败!!!");
             }
         }
+
         FileInputStream inputStream = new FileInputStream(file);
         FileOutputStream outputStream = null;
         int len;
