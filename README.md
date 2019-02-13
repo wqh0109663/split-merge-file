@@ -11,6 +11,11 @@
 3. 运行splitFile和mergeFile
 
 ## 命令行中使用方式(主要针对黑窗口Linux)
-TODO
+```bash
+vim out/conf/filePath.properties
+# add you need to be splited file
+cd out
+java main.SplitFile
+```
 
 
