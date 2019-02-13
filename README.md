@@ -16,6 +16,7 @@ vim out/conf/filePath.properties
 # add you need to be splited file
 cd out
 java main.SplitFile
+java main.MergeFile
 ```
 
 
