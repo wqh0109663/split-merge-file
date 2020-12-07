@@ -2,7 +2,6 @@ package utils;
 
 import main.SplitFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -18,7 +17,8 @@ public class ConfUtil {
         InputStream resourceAsStream = null;
         try {
             Properties properties = new Properties();
-            resourceAsStream = SplitFile.class.getClassLoader().getResourceAsStream("conf/filePath.properties");
+            resourceAsStream = SplitFile.class.getClassLoader()
+                    .getResourceAsStream("conf/filePath.properties");
             properties.load(resourceAsStream);
             return properties.getProperty("fileLocation");
         } catch (IOException e) {
